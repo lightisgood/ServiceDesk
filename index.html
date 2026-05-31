@@ -147,7 +147,8 @@
     <button class="bar-btn" onclick="doRefresh()">↻</button>
     <button class="bar-btn" onclick="doLogout()" title="התנתק">⎋</button>
   </div>
-  <iframe id="frame" allow="same-origin scripts forms popups"></iframe>
+  <iframe id="frame" allow="same-origin scripts forms popups"
+    style="transform-origin:top left;width:1280px;height:100%;border:none;"></iframe>
 </div>
 
 <!-- INSTALL BANNER -->
@@ -251,6 +252,18 @@
     sessionStorage.setItem('bd','1');
     document.getElementById('banner').classList.remove('show');
   }
+
+  function scaleFrame() {
+    const frame = document.getElementById('frame');
+    const container = document.getElementById('s-webview');
+    const scale = container.clientWidth / 1280;
+    frame.style.transform = `scale(${scale})`;
+    frame.style.height = (container.clientHeight / scale) + 'px';
+  }
+  window.addEventListener('resize', scaleFrame);
+  // Scale after login shows webview
+  const _show = show;
+  show = function(id) { _show(id); if (id === 's-webview') setTimeout(scaleFrame, 100); };
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !document.getElementById('s-login').classList.contains('hidden')) doLogin();
